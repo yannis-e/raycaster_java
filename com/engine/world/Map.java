@@ -7,9 +7,9 @@ import java.io.IOException;
 import com.engine.util.Vector2D;
 
 public class Map {
-    private int[][] grid;
-    private int width;
-    private int height;
+    public int[][] grid;
+    public int width;
+    public int height;
 
     public boolean loadSuccessful;
 
@@ -53,7 +53,8 @@ public class Map {
     }
 
     public boolean isWall(Vector2D tile) {
-        if (tile.y < 0 || tile.x >= width || tile.y < 0 || tile.y >= height) return true;
+        if (tile.x < 0 || tile.x >= width || tile.y < 0 || tile.y >= height) return true; 
+
         return grid[(int)tile.y][(int)tile.x] > 0;
     }
 
