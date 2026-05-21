@@ -26,9 +26,9 @@ public class Player {
             Position.y = newY;
         }
     }
-    public Player(double spawnX, double spawnY) {
-        this.Position = new Vector2D(spawnX, spawnY);
+    public Player(Vector2D spawn) {
+        this.Position = spawn.copy();
         this.Direction = new Vector2D(1.0, 0.0);
-        this.Plane = new Vector2D(0.0, 0.66);
+        this.Plane = new Vector2D(0.0, 0.88);
     }
 }

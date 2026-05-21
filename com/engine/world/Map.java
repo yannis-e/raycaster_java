@@ -62,4 +62,16 @@ public class Map {
         if (tile.x < 0 || tile.x >= width || tile.y < 0 || tile.y >= height) return 1;
         return grid[(int)tile.y][(int)tile.x];
     }
+
+    public Vector2D findSpawnPosition() {
+    for (int y = 0; y < this.height; y++) {
+        for (int x = 0; x < this.width; x++) {
+            if (grid[y][x] == 1) {
+                grid[y][x] = 0;
+                return new Vector2D(x + 0.5, y + 0.5);
+            }
+        }
+    }
+    return new Vector2D(2.5, 2.5);
+}
 }
