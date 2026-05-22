@@ -4,11 +4,7 @@ import com.engine.world.Map;
 import com.engine.world.Player;
 import com.engine.util.Vector2D;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 public class Renderer {
 
@@ -43,38 +39,30 @@ public class Renderer {
     private void loadTextures(String[] textureNames) {
 
         for (int i = 0; i < textureNames.length; i++) {
-
+    
             int texIndex = i + TEXTURE_START;
+    
             String filePath = "com/assets/textures/" + textureNames[i];
             File file = new File(filePath);
-
-            if (file.exists()) {
-                try {
-                    textures[texIndex] = new Texture(scaled, texWidth, texHeight);
-                } catch (IOException e) {
-                    textures[texIndex] = createFallbackTexture();
-                }
-            } else {
-                textures[texIndex] = createFallbackTexture();
+    
+            if (!file.exists() || file.isDirectory()) {
+                System.out.println("Texture not found: " + filePath);
+    
+                textures[texIndex] = new Texture(
+                    new File[]{ new File("missing") },
+                    texWidth,
+                    texHeight
+                );
+    
+                continue;
             }
+    
+            textures[texIndex] = new Texture(
+                new File[]{ file },
+                texWidth,
+                texHeight
+            );
         }
-    }
-
-    private Texture createFallbackTexture() {
-
-        BufferedImage img = new BufferedImage(texWidth, texHeight, BufferedImage.TYPE_INT_RGB);
-
-        for (int y = 0; y < texHeight; y++) {
-            for (int x = 0; x < texWidth; x++) {
-
-                boolean checker = ((x / 16) + (y / 16)) % 2 == 0;
-                int color = checker ? 0xAAAAAA : 0x555555;
-
-                img.setRGB(x, y, color);
-            }
-        }
-
-        return new Texture(img, texWidth, texHeight);
     }
 
     private float getLight(int tileX, int tileY, Player player) {

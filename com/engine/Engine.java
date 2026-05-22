@@ -14,9 +14,9 @@ public class Engine {
     private Display display;
     private Input input;
 
-    double moveSpeed = 0.05;
-    double rotateSpeed = 0.04;
-    double strafeSpeed = 0.02;
+    double moveSpeed = 4;
+    double rotateSpeed = 2;
+    double strafeSpeed = 2;
     
     String[] textures = {
         "walls/bars_red_4.png",
@@ -57,8 +57,8 @@ public class Engine {
 
         this.player = new Player(map.findSpawnPosition());
         
-        int width = 1920;
-        int height = 1080;
+        int width = 640;
+        int height = 280;
         this.renderer = new Renderer(width, height, textures);
         this.display = new Display("Raycasting", width, height);
 
@@ -67,36 +67,40 @@ public class Engine {
     }
 
     public void run() {
+        double lastTime = System.nanoTime();
         while (true) {
+                double now = System.nanoTime();
+                double deltaTime = (now - lastTime) /  1_000_000_000.0;
+                lastTime = now;
+                
+                /* 
+                double fps = 1.0 / deltaTime;
+                System.out.println("FPS: " + (int)fps);
+                */
+
                 input.update();
                 if (input.forward) {
-                    player.move(player.Direction, moveSpeed, map);
+                    player.move(player.Direction, moveSpeed * deltaTime, map);
                 }
                 if (input.back) {
                     Vector2D backwardDir = new Vector2D(-player.Direction.x, -player.Direction.y);
-                    player.move(backwardDir, moveSpeed, map);
+                    player.move(backwardDir, moveSpeed * deltaTime, map);
                 }
 
                 if (input.strafeLeft) {
                     Vector2D leftDir = new Vector2D(player.Direction.y, -player.Direction.x);
-                    player.move(leftDir, strafeSpeed, map);
+                    player.move(leftDir, strafeSpeed * deltaTime, map);
                 }
                 if (input.strafeRight) {
                     Vector2D rightDir = new Vector2D(-player.Direction.y, player.Direction.x);
-                    player.move(rightDir, strafeSpeed, map);
+                    player.move(rightDir, strafeSpeed * deltaTime, map);
                 }
 
-                if (input.rotateLeft)  player.rotate(-rotateSpeed);
-                if (input.rotateRight) player.rotate(rotateSpeed);
+                if (input.rotateLeft)  player.rotate(-rotateSpeed * deltaTime);
+                if (input.rotateRight) player.rotate(rotateSpeed * deltaTime);
 
             renderer.render(player, map);
             display.render(renderer.getPixels());
-
-            try {
-                Thread.sleep(16); 
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 
